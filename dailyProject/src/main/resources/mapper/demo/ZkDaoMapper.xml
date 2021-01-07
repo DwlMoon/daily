@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dailyproject.moon.zookeeper.dao.ZkDao">
+
+
+    <insert id="insertUserData">
+      insert into user_data
+      ( id, name, age, sex)
+      VALUES(
+       #{userData.id} ,#{userData.name} ,#{userData.age} ,#{userData.sex}
+      )ON DUPLICATE KEY UPDATE id = #{userData.id}, name = #{userData.name}
+    </insert>
+
+
+    <resultMap id="userDataMap" type="dailyproject.moon.zookeeper.entity.UserData">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="sex" property="sex" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="getUserData" resultMap="userDataMap">
+       select id,name,age,sex from user_data where id=#{id}
+    </select>
+
+
+
+
+
+</mapper>

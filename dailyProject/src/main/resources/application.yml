@@ -1,0 +1,45 @@
+server:
+  port: 8989
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.96.130:3306/moon_test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&tinyInt1isBit=false
+    username: root
+    password: Long123_@456
+  thymeleaf:
+    prefix: classpath:/templates/
+  data:
+    mongodb:
+      uri: mongodb://192.168.96.130:27017/test
+
+
+
+  redis:
+    host: 192.168.96.130
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 500
+        min-idle: 0
+    lettuce:
+      shutdown-timeout: 0
+
+
+  elasticsearch:
+    rest:
+      uris: http://192.168.96.130:9200
+
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+
+
