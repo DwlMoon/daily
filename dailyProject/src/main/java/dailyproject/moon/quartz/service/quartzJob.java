@@ -2,6 +2,9 @@ package dailyproject.moon.quartz.service;
 
 import org.quartz.*;
 
+import java.time.LocalTime;
+import java.util.Date;
+
 /**
  * @program: daily_test
  * @description:
@@ -16,6 +19,6 @@ public class quartzJob implements Job {
         //获取触发器传递过来的参数
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
         Object su = (String)jobDataMap.get("su");
-        System.out.println("quartz的执行时间是 : "+System.currentTimeMillis()+" __ "+su);
+        System.out.println("触发器的执行时间： : "+ LocalTime.now()+" 值为： "+su);
     }
 }

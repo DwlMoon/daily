@@ -2,14 +2,12 @@ server:
   port: 8989
 
 
-
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
-
 spring:
   profiles:
-    active: dev
+    active: test
