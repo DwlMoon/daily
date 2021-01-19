@@ -1,6 +1,7 @@
 package dailyproject.moon.quartz.controller;
 
 import dailyproject.moon.quartz.service.quartzJob;
+import dailyproject.moon.quartz.util.ScheduledTimeUtil;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class QuartzConroller {
 
     @Autowired
     Scheduler sched;
+
+    @Autowired
+    ScheduledTimeUtil scheduledTimeUtil;
 
     @PostConstruct
     public void init(){
@@ -109,6 +113,17 @@ public class QuartzConroller {
             e.printStackTrace();
             System.out.println("删除任务："+jobClassName+"失败");
         }
+    }
+
+
+    /** spring 简单定时任务
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="lala", method = {RequestMethod.GET})
+    public String lala(){
+        String corn="0/5 * * * * ?";
+        return scheduledTimeUtil.changeTask(corn);
     }
 
 }
