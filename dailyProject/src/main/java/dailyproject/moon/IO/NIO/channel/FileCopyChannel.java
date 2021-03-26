@@ -1,4 +1,4 @@
-package dailyproject.moon.NIO.nio.channel;
+package dailyproject.moon.IO.NIO.channel;
 
 import org.junit.Test;
 

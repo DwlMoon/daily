@@ -1,18 +1,13 @@
-package dailyproject.moon.NIO.nio.channel;
+package dailyproject.moon.IO.NIO.channel;
 
-import com.alibaba.druid.sql.visitor.functions.Char;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * @program: daily_test
@@ -156,10 +151,11 @@ public class SocketNIO {
                     //切换到非阻塞模式
                     accept.configureBlocking(false);
 
-                    //注册到选择器
+                    //注册到选择器（主要是为了切换到 read 事件）
                     accept.register(selector, SelectionKey.OP_READ);
 
-                } else if (key.isReadable()) {
+                }
+                if (key.isReadable()) {
 
                     //获取当前选择器上度就绪事件
                     SocketChannel socketChannel = (SocketChannel) key.channel();

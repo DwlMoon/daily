@@ -1,4 +1,4 @@
-package dailyproject.moon.NIO.nio.channel.SocketChannel;
+package dailyproject.moon.IO.NIO.channel.SocketChannel;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,9 +8,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import java.util.Scanner;
 
 /**
  * @program: daily_test

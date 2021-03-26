@@ -1,4 +1,4 @@
-package dailyproject.moon.NIO.nio.channel.SocketChannel;
+package dailyproject.moon.IO.NIO.channel.SocketChannel;
 
 import java.io.IOException;
 import java.net.InetAddress;

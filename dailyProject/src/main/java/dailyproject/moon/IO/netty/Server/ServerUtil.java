@@ -1,4 +1,4 @@
-package dailyproject.moon.NIO.netty.Server;
+package dailyproject.moon.IO.netty.Server;
 
 import io.netty.bootstrap.ServerBootstrap;
 

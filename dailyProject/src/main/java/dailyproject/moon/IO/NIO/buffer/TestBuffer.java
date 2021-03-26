@@ -1,4 +1,4 @@
-package dailyproject.moon.NIO.nio.buffer;
+package dailyproject.moon.IO.NIO.buffer;
 
 import org.junit.Test;
 
