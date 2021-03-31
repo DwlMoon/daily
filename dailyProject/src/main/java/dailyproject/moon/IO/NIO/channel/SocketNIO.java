@@ -238,9 +238,109 @@ public class SocketNIO {
                         buffer.clear();
                     }
                 }
+                iterator.remove();
             }
-            iterator.remove();
         }
+    }
+
+
+
+    @Test
+    public void showClient()throws Exception{
+        SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 8989));
+        socketChannel.configureBlocking(false);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        byteBuffer.put("星期二".getBytes());
+        byteBuffer.flip();
+        socketChannel.write(byteBuffer);
+        socketChannel.close();
+        byteBuffer.clear();
+
+    }
+
+
+
+    @Test
+    public void showServer()throws Exception{
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false);
+        serverSocketChannel.bind(new InetSocketAddress(8989));
+
+        Selector selector = Selector.open();
+        serverSocketChannel.register(selector,SelectionKey.OP_ACCEPT);
+
+        while (selector.select()>0){
+            Iterator<SelectionKey> selectionKeyIterator = selector.selectedKeys().iterator();
+            while (selectionKeyIterator.hasNext()){
+                SelectionKey selectionKey = selectionKeyIterator.next();
+                if (selectionKey.isAcceptable()){
+                    SocketChannel socketChannel = serverSocketChannel.accept();
+                    socketChannel.configureBlocking(false);
+                    socketChannel.register(selector,SelectionKey.OP_READ);
+                }
+                if (selectionKey.isReadable()){
+                    SocketChannel channel = (SocketChannel) selectionKey.channel();
+                    ByteBuffer allocate = ByteBuffer.allocate(1024);
+                    while (channel.read(allocate) != -1){
+                        allocate.flip();
+                        System.out.println(new String(allocate.array(),0,allocate.limit()));
+                        allocate.clear();
+                    }
+                }
+                selectionKeyIterator.remove();
+            }
+        }
+
+
+    }
+
+
+
+    @Test
+    public void  hah()throws Exception{
+        SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 1212));
+        socketChannel.configureBlocking(false);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        byteBuffer.put("我就是不知道啊".getBytes());
+        byteBuffer.flip();
+        socketChannel.write(byteBuffer);
+        byteBuffer.clear();
+        socketChannel.close();
+
+    }
+
+
+    @Test
+    public void lili()throws Exception{
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false);
+        serverSocketChannel.bind(new InetSocketAddress(1212));
+        Selector selector = Selector.open();
+        serverSocketChannel.register(selector,SelectionKey.OP_ACCEPT);
+        while (selector.select()>0){
+            Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+            while (iterator.hasNext()){
+                SelectionKey selectionKey = iterator.next();
+                iterator.remove();
+                if (selectionKey.isAcceptable()){
+                    SocketChannel socketChannel = serverSocketChannel.accept();
+                    socketChannel.configureBlocking(false);
+                    socketChannel.register(selector,SelectionKey.OP_READ);
+                }
+
+                if (selectionKey.isReadable()){
+                    SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+                    while (socketChannel.read(byteBuffer)!=-1){
+                        byteBuffer.flip();
+                        System.out.println(new String(byteBuffer.array(),0,byteBuffer.limit()));
+                        byteBuffer.clear();
+                    }
+                }
+
+            }
+        }
+
     }
 
 
