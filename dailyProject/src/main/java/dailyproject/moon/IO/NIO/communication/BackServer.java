@@ -79,10 +79,12 @@ public class BackServer {
             if (channel instanceof SocketChannel && channel !=socketChannel){
                 //转发
                 SocketChannel sendsocketChanne=(SocketChannel)channel;
-                ByteBuffer byteBuffer = ByteBuffer.wrap(msg.getBytes());
-                byteBuffer.flip();
-                System.out.println("lalal============"+new String(byteBuffer.array()));
-                sendsocketChanne.write(byteBuffer);
+                ByteBuffer allocate = ByteBuffer.allocate(1024);
+                ByteBuffer put = allocate.put(msg.getBytes());
+                put.flip();
+//                ByteBuffer byteBuffer = ByteBuffer.wrap(msg.getBytes());
+//                System.out.println("lalal============"+new String(byteBuffer.array()));
+                sendsocketChanne.write(put);
             }
         }
     }

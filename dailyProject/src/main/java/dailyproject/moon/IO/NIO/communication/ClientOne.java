@@ -8,8 +8,11 @@ import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @program: daily_test
@@ -34,7 +37,7 @@ public class ClientOne {
     }
 
     public void sendMsgToServer(String msg){
-        msg = username+"说"+msg;
+        msg = username+"说： "+msg;
         try {
             socketChannel.write(ByteBuffer.wrap(msg.getBytes()));
         } catch (IOException e) {
@@ -43,10 +46,8 @@ public class ClientOne {
     }
 
     public void readMsgFromServer(){
-        System.out.println("********************************");
         try {
-            while (selector.select()>0){
-                System.out.println("读取信息中");
+            if (selector.select()>0){
                 Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
                 while (keyIterator.hasNext()){
                     SelectionKey selectionKey = keyIterator.next();
@@ -57,7 +58,9 @@ public class ClientOne {
                         channel.read(buffer);
                         buffer.flip();
                         String s = new String(buffer.array());
-                        System.out.println("客户端获取的消息为："+s);
+                        System.out.println("*********************************************");
+                        System.out.println(new Date());
+                        System.out.println(s);
                     }
                 }
             }
@@ -71,14 +74,20 @@ public class ClientOne {
         ClientOne clientOne = new ClientOne();
 
         //启动一个线程完成工作(每隔三秒读取一次)
-        new Thread(){
+        ExecutorService exec = Executors.newFixedThreadPool(5);
+        exec.execute(new Runnable() {
             @Override
             public void run () {
                 while (true){
-                    clientOne.readMsgFromServer();
+                    try {
+                        Thread.sleep(3000);
+                        clientOne.readMsgFromServer();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }.start();
+        });
 
         Scanner scanner = new Scanner(System.in);
 
