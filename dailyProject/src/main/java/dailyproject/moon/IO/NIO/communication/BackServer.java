@@ -33,6 +33,7 @@ public class BackServer {
     public void myServer(){
         try {
             while (selector.select()>0){
+                System.out.println("监听线程："+Thread.currentThread().getName());
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
                 while (iterator.hasNext()){
                     SelectionKey selectionKey = iterator.next();
@@ -71,6 +72,7 @@ public class BackServer {
      */
     public void sendInfoToOtherClient(String msg,SocketChannel socketChannel)throws Exception{
         System.out.println("服务器转发消息中》》》");
+        System.out.println("服务器转发线程："+Thread.currentThread().getName());
         //遍历 所有注册到selector上的socketChannel，并排除自己
         for (SelectionKey selectionKey:selector.keys()){
             Channel channel = selectionKey.channel();
