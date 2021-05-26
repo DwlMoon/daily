@@ -1,4 +1,4 @@
-package dailyproject.moon.IO.netty.Client;
+package dailyproject.moon.IO.netty.demo.Client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;

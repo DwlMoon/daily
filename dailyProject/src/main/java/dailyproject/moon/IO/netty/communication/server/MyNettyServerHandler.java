@@ -1,5 +1,6 @@
 package dailyproject.moon.IO.netty.communication.server;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -45,33 +46,35 @@ public class MyNettyServerHandler extends ChannelInboundHandlerAdapter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("事件1处理中》》》》》");
+            ByteBuf byteBuf = (ByteBuf) msg;
+            System.out.println("客户端发送的消息："+byteBuf.toString(CharsetUtil.UTF_8));
+            System.out.println("客户端地址："+ctx.channel().remoteAddress());
             }
         });
-        ctx.channel().eventLoop().execute(new Runnable() {
-            @Override
-            public void run () {
-                try {
-                    Thread.sleep(10*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("事件2处理中》》》》》");
-            }
-        });
-
-        //用户自定义定时任务 ， 该任务是提交到 scheduleTaskQueue 中
-        ctx.channel().eventLoop().schedule(new Runnable() {
-            @Override
-            public void run () {
-                try {
-                    Thread.sleep(10*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("事件3处理中》》》》》");
-            }
-        },5, TimeUnit.SECONDS);
+//        ctx.channel().eventLoop().execute(new Runnable() {
+//            @Override
+//            public void run () {
+//                try {
+//                    Thread.sleep(10*1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                System.out.println("事件2处理中》》》》》");
+//            }
+//        });
+//
+//        //用户自定义定时任务 ， 该任务是提交到 scheduleTaskQueue 中
+//        ctx.channel().eventLoop().schedule(new Runnable() {
+//            @Override
+//            public void run () {
+//                try {
+//                    Thread.sleep(10*1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                System.out.println("事件3处理中》》》》》");
+//            }
+//        },5, TimeUnit.SECONDS);
 
 
     }
@@ -87,6 +90,7 @@ public class MyNettyServerHandler extends ChannelInboundHandlerAdapter {
         //将数据写入到缓存并刷新
         //将发送的数据进行编码
         ctx.writeAndFlush(Unpooled.copiedBuffer("hello , client",CharsetUtil.UTF_8));
+        ctx.channel().close();
     }
 
 

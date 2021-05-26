@@ -1,7 +1,6 @@
-package dailyproject.moon.IO.netty.Server;
+package dailyproject.moon.IO.netty.demo.Server;
 
 import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.socket.SocketChannel;

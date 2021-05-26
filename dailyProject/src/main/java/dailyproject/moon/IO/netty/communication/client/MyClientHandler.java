@@ -16,7 +16,7 @@ public class MyClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive (ChannelHandlerContext ctx) throws Exception {
-        ctx.writeAndFlush(Unpooled.copiedBuffer("你好，服务器", CharsetUtil.UTF_8));
+        ctx.writeAndFlush(Unpooled.copiedBuffer("客户端已连接", CharsetUtil.UTF_8));
     }
 
     @Override

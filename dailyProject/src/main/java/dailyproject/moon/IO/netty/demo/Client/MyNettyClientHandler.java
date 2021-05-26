@@ -1,4 +1,4 @@
-package dailyproject.moon.IO.netty.Client;
+package dailyproject.moon.IO.netty.demo.Client;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

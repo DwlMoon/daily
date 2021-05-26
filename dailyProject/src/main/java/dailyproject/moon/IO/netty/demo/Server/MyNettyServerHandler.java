@@ -1,6 +1,5 @@
-package dailyproject.moon.IO.netty.Server;
+package dailyproject.moon.IO.netty.demo.Server;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
