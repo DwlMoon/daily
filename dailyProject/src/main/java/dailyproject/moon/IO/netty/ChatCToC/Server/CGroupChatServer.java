@@ -18,11 +18,11 @@ import io.netty.util.concurrent.GenericFutureListener;
  * @create: 2021-05-26 16:31
  **/
 
-public class GroupChatServer {
+public class CGroupChatServer {
 
     private int port;
 
-    public GroupChatServer (int port) {
+    public CGroupChatServer (int port) {
         this.port = port;
     }
 
@@ -74,7 +74,7 @@ public class GroupChatServer {
     }
 
     public static void main (String[] args) {
-        new GroupChatServer(8989).run();
+        new CGroupChatServer(8989).run();
     }
 
 

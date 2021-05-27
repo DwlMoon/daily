@@ -1,5 +1,7 @@
 package dailyproject.moon.IO.netty.ChatCToC.Client;
 
+import dailyproject.moon.common.util.MoonJsonUtil;
+import dailyproject.moon.common.util.MoonStringUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -9,6 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -17,13 +20,13 @@ import java.util.Scanner;
  * @create: 2021-05-26 19:49
  **/
 
-public class GroupChatClient {
+public class CGroupChatClient {
 
     private  final String ip;
 
     private  final  int  port;
 
-    public GroupChatClient (String ip, int port) {
+    public CGroupChatClient (String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
@@ -50,16 +53,39 @@ public class GroupChatClient {
                     });
 
             ChannelFuture channelFuture = bootstrap.connect(ip, port).sync();
-            System.out.println("==============》"+channelFuture.channel().localAddress());
+            System.out.println("==============》"+channelFuture.channel().id().asShortText());
 
+//            Scanner scanner = new Scanner(System.in);
+//            System.out.println("对话用户为：");
+//            String user = scanner.nextLine();
+//            System.out.println("通话内容为：");
+//            String msg = scanner.nextLine();
+//            HashMap<String, String> map = new HashMap<>();
+//            map.put("user",user);
+//            map.put("msg",msg);
+//            String json = MoonJsonUtil.mapToJson(map, true);
+//            while (scanner.hasNextLine()){
+//                String msg = scanner.nextLine();
+//                StringBuilder stringBuilder = new StringBuilder();
+//
+//
+//                //通过Channel发送到服务器端
+//                channelFuture.channel().writeAndFlush(msg +"\r\n");
+//            }
             Scanner scanner = new Scanner(System.in);
-            while (scanner.hasNextLine()){
+            while (true){
+                System.out.println("************************************************");
+                System.out.println("对话用户为：");
+                String user = scanner.nextLine();
+                System.out.println("通话内容为：");
                 String msg = scanner.nextLine();
-                StringBuilder stringBuilder = new StringBuilder();
-
-
-                //通过Channel发送到服务器端
-                channelFuture.channel().writeAndFlush(msg +"\r\n");
+                HashMap<String, String> map = new HashMap<>();
+                map.put("user",user);
+                map.put("msg",msg);
+                String json = MoonJsonUtil.mapToJson(map, true);
+                if (MoonStringUtils.isNotBlank(json)){
+                    channelFuture.channel().writeAndFlush(json +"\r\n");
+                }
             }
 
         } catch (InterruptedException e) {
@@ -70,6 +96,6 @@ public class GroupChatClient {
     }
 
     public static void main (String[] args) {
-        new GroupChatClient("127.0.0.1",8989).run();
+        new CGroupChatClient("127.0.0.1",8989).run();
     }
 }
