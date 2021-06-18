@@ -5,6 +5,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: daily_test
@@ -39,6 +44,9 @@ public class NettyServer {
                     //使用NioServerSocketChannel作为boosGroup 通道
                     .channel(NioServerSocketChannel.class)
 
+                    //日志
+                    .handler(new LoggingHandler(LogLevel.INFO))
+
                     //设置线程队列得到连接个数
                     .option(ChannelOption.SO_BACKLOG,128)
 
@@ -55,7 +63,23 @@ public class NettyServer {
                              * 每个用户都对应一个socketChannel，可以将对应的socketChannel储存起来
                              * 在推送消息时，将业务加到channel对用的eventloop对应的TaskQueue中执行
                              * */
-                            socketChannel.pipeline().addLast(new MyNettyServerHandler());
+                            socketChannel.pipeline()
+                                    /**
+                                     *  IdleStateHandler 是netty提供的处理空闲状态的处理器
+                                     *
+                                     *   readerIdleTime, 表示多久没有读操作，会发送一个心跳检测包检测是否连接
+                                     *
+                                     *   writerIdleTime, 表示多久没有写，会发送一个心跳检测包检测是否连接
+                                     *
+                                     *   allIdleTime, 表示多长时间既没有读，也没有写
+                                     *
+                                     *   当有对应的事件触发后，会传递给下一个管道进行处理
+                                     *   通过调用下一个handler的 userEventTrigger ，在改方法中进行处理
+                                     * */
+                                    .addLast(new IdleStateHandler(3,5,7, TimeUnit.SECONDS))
+                                    //加入对空闲检测进一步处理的handler
+//                                    .addLast(null)
+                                    .addLast(new MyNettyServerHandler());
                         }
                     });
 

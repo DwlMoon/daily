@@ -22,7 +22,7 @@ public class MyServer {
 
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap
-                .group(worker, worker)
+                .group(boss, worker)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG,128)
                 .childOption(ChannelOption.SO_KEEPALIVE,true)

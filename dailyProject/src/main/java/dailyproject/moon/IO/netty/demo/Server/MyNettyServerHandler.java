@@ -3,7 +3,9 @@ package dailyproject.moon.IO.netty.demo.Server;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -99,5 +101,31 @@ public class MyNettyServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught (ChannelHandlerContext ctx, Throwable cause) throws Exception {
         ctx.channel().close();
+    }
+
+
+    @Override
+    public void userEventTriggered (ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent){
+            //将event 向下转型
+            IdleStateEvent stateEvent = (IdleStateEvent) evt;
+
+            switch (stateEvent.state()){
+                //读空闲
+                case READER_IDLE:
+                    System.out.println("读 空闲");
+                    break;
+                //写空闲
+                case WRITER_IDLE:
+                    System.out.println("写 空闲");
+                    break;
+                //读写空闲
+                case ALL_IDLE:
+                    System.out.println("读 写 空闲");
+                    break;
+            }
+
+            System.out.println(ctx.channel().remoteAddress()+"超时");
+        }
     }
 }
