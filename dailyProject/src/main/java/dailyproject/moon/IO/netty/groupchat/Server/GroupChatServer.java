@@ -13,6 +13,11 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * @program: daily_test
  * @description:
@@ -21,11 +26,9 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 public class GroupChatServer {
 
-    private int port;
+    static HashMap<String,ChannelFuture> map=new HashMap<>();
 
-    public GroupChatServer (int port) {
-        this.port = port;
-    }
+    static ServerBootstrap bootstrap=null;
 
     //编写run方法，处理客户端请求
     public void run(){
@@ -36,10 +39,11 @@ public class GroupChatServer {
             boss = new NioEventLoopGroup();
             worker = new NioEventLoopGroup();
 
-            ServerBootstrap bootstrap = new ServerBootstrap();
+            bootstrap = new ServerBootstrap();
             bootstrap.group(boss, worker)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG,128)
+
                     .childOption(ChannelOption.SO_KEEPALIVE,true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
@@ -55,27 +59,47 @@ public class GroupChatServer {
                     });
 
             System.out.println("netty 服务器已经启动");
-            ChannelFuture channelFuture = bootstrap.bind(port).sync();
-            channelFuture.channel().closeFuture().sync();
-            channelFuture.addListener(new GenericFutureListener<Future<? super Void>>() {
-                @Override
-                public void operationComplete (Future<? super Void> future) throws Exception {
-                    if (future.isSuccess()){
-                        System.out.println("连接成功");
-                    }
-                }
-            });
-        } catch (InterruptedException e) {
+
+            //同步阻塞等待(
+            // 该语句能让线程进入wait状态，也就是main线程暂时不会执行到finally里面，
+            // nettyserver也持续运行，如果监听到关闭事件，可以优雅的关闭通道和nettyserver
+            // )
+            bootstrap.bind().channel().closeFuture().sync();
+
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        }finally {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
         }
 
     }
 
-    public static void main (String[] args) {
-        new GroupChatServer(8989).run();
+    public static   GenericFutureListener<Future<? super Void>>  genericFutureListener (){
+        return new GenericFutureListener<Future<? super Void>>() {
+            @Override
+            public void operationComplete (Future<? super Void> future) throws Exception {
+                if (future.isSuccess()){
+                    System.out.println("连接成功");
+                }
+            }
+        };
+    }
+
+    public void shutChannel(){
+        map.get("1").channel().close();
+    }
+
+    public static void main (String[] args)throws Exception {
+        new GroupChatServer().run();
+        //绑定多个端口并加入到集合中
+
+        map.put("1",
+                bootstrap.bind(new InetSocketAddress("172.20.0.216",8989)).sync()
+                        .addListener(genericFutureListener()));
+        map.put("2",
+                bootstrap.bind(new InetSocketAddress("172.20.0.216",9090)).sync()
+                        .addListener(genericFutureListener()));
     }
 
 
